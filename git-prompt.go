@@ -101,9 +101,22 @@ func parseStatus(text string) (string, map[string]bool) {
 
 func colorText(text string, color string) string {
 	colors := map[string]string{
-		"green":  "92",
-		"yellow": "93",
-		"red":    "31",
+		"brightblack":   "90",
+		"brightred":     "91",
+		"brightgreen":   "92",
+		"brightyellow":  "93",
+		"brightblue":    "94",
+		"brightmagenta": "95",
+		"brightcyan":    "96",
+		"brightwhite":   "97",
+		"black":         "30",
+		"red":           "31",
+		"green":         "32",
+		"yellow":        "33",
+		"blue":          "34",
+		"magenta":       "35",
+		"cyan":          "36",
+		"white":         "37",
 	}
 
 	return "\001\033[" + colors[color] + "m\002" + text + "\001\033[0m\002"
@@ -111,38 +124,37 @@ func colorText(text string, color string) string {
 
 func formatStatus(branch string, status map[string]bool) string {
 	flags := ""
-	color := "green"
 
 	if status["changed"] {
-		flags += "*"
-		color = "yellow"
+		flags += colorText("*", "red")
 	}
 
 	if status["untracked"] {
-		flags += "?"
-		color = "yellow"
+		flags += colorText("?", "brightblack")
 	}
 
 	if status["conflict"] {
-		flags += "!"
-		color = "red"
+		flags += colorText("!", "magenta")
 	}
 
 	if status["ahead"] && status["behind"] {
-		flags += "↕"
+		flags += colorText("↕", "brightred")
 	} else if status["ahead"] {
-		flags += "↑"
+		flags += colorText("↑", "blue")
 	} else if status["behind"] {
-		flags += "↓"
+		flags += colorText("↓", "brightyellow")
 	}
 
-	if flags != "" {
-		flags = " " + flags
+	parenColor := "brightred"
+	branchColor := "yellow"
+	if len(flags) == 0 {
+		parenColor = "yellow"
+		branchColor = "brightred"
 	}
 
-	text := fmt.Sprintf("[%s%s]", branch, flags)
+	text := fmt.Sprintf("%s%s%s%s", colorText("(", parenColor), flags, colorText(branch, branchColor), colorText(")", parenColor))
 
-	return colorText(text, color)
+	return text
 }
 
 func main() {
