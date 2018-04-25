@@ -130,19 +130,19 @@ func formatStatus(branch string, status map[string]bool) string {
 	}
 
 	if status["untracked"] {
-		flags += colorText("?", "brightblack")
+		flags += "❔ "
 	}
 
 	if status["conflict"] {
-		flags += colorText("!", "magenta")
+		flags += "❗️ "
 	}
 
 	if status["ahead"] && status["behind"] {
-		flags += colorText("↕", "brightred")
+		flags += colorText("⧗ ", "brightred")
 	} else if status["ahead"] {
-		flags += colorText("↑", "blue")
+		flags += colorText("⬆︎ ", "blue")
 	} else if status["behind"] {
-		flags += colorText("↓", "brightyellow")
+		flags += colorText("⬇︎ ", "brightyellow")
 	}
 
 	parenColor := "brightred"
